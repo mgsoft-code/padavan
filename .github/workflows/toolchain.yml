@@ -17,7 +17,7 @@ jobs:
       - name: Install Build Dependencies
         run: |
           sudo apt-get update
-          # 新增 p7zip-full 用于解压 7z 包，补齐所有编译依赖
+          # 补齐编译、7z解压、libtool 全套依赖
           sudo apt-get install -y bison flex gperf help2man libtool texinfo p7zip-full
           sudo apt-get install -y libtool-bin || true
 

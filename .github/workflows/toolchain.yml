@@ -13,22 +13,26 @@ jobs:
         target: [mipsel-linux-musl, mipsel-linux-uclibc]
     steps:
       - uses: actions/checkout@main
+
       - name: Install Build Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y bison flex gperf help2man libtool texinfo
-          # 兼容新旧系统，不存在 libtool-bin 也不报错
+          # 新增 p7zip-full 用于解压 7z 包，补齐所有编译依赖
+          sudo apt-get install -y bison flex gperf help2man libtool texinfo p7zip-full
           sudo apt-get install -y libtool-bin || true
+
       - name: Build and Package
         run: |
           make CT_TARGET=${{ matrix.target }}
           cd "${{ matrix.target }}"
           tar cJf "../${{ matrix.target }}.tar.xz" .
         working-directory: toolchain
+
       - uses: actions/upload-artifact@main
         with:
           name: ${{ matrix.target }}
           path: toolchain/${{ matrix.target }}.tar.xz
+
       - uses: ncipollo/release-action@main
         with:
           tag: toolchain
